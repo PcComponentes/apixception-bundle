@@ -5,8 +5,9 @@ namespace PcComponentes\Apixception\Core;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+
 
 class ApixceptionDispatcher implements EventSubscriberInterface
 {
@@ -28,9 +29,9 @@ class ApixceptionDispatcher implements EventSubscriberInterface
         );
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         foreach ($this->subscribers as $subscriber) {
             if (false === \is_a($exception, $subscriber->exception(), true)) {
